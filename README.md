@@ -1,13 +1,17 @@
 # tftools
 Tools for analysis of time and frequency data.
 
-adev.m    Overlapping/non-overlapping Allan deviation, with/without gaps
-mdev.m    Modfied Allan deviation
-totdev.m  Total deviation
+MATLAB functions and scripts
+----------------------------
 
-freq2phase.m
-markgaps.m
-validation.m 
+| Function/script     |  Description    |
+| ---- | -----|
+|adev.m      |  Overlapping/non-overlapping Allan deviation, with/without gaps|
+|mdev.m      |  Modified Allan deviation|
+|totdev.m     | Total deviation|
+|freq2phase.m | Converts frequency data to phase |
+|markgaps.m    | Detects gaps in a time series |
+|validation.m  |Runs a validation against test data from NIST|
 
 
 
