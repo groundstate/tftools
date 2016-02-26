@@ -33,9 +33,28 @@ function [ dev,deverr, ndev ] = adev( x,rate,tau,overlap,phase, gaps )
 % LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
+%
+% Credits:
+% This code is based on allantools.py, written by Anders Wallin
+%
+
+if (nargin > 6)
+    error('tftools:adev:TooManyInputs', 'requires at most 3 optional arguments');
+end;
+
+defaults = {1 1 0};
+
+switch nargin
+    case 3
+        [overlap phase gaps] = defaults{:};
+    case 4
+        [phase gaps]=defaults{2:3};
+    case 5
+        gaps=defaults{3};
+end;
 
 if (phase == 0)
-    
+    x=freq2phase(x,rate);
 end;
 
 ntau=length(tau);

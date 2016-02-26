@@ -1,13 +1,12 @@
-function [ mdv,mdverr, nmdv ] = adev( x,rate,tau,phase, gaps )
-%ADEV Calculate non-overlapping/overlapping Allan deviation of phase/
+function [ mdv,mdverr, nmdv ] = mdev( x,rate,tau,phase, gaps )
+%MDEV Calculate modified Allan deviation of phase/
 % or fractional frequency data
 %   Usage: adev(x,rate,tau,overlap,phase,gaps) 
 %   x is the input time series
 %   rate is the sampling rate, in Hz
 %   tau is the averaging interval 
-%   overlap = 1 means compute overlapping ADEV
-%   phase = 1 means data is phase
-%   gaps = 1 means data contains gaps, tagged with NaN
+%   phase = 1 means data is phase (optional,default=1)
+%   gaps = 1 means data contains gaps, tagged with NaN (optional,default=0)
 %
 %   Frequency data is converted internally to phase
 %
@@ -34,8 +33,26 @@ function [ mdv,mdverr, nmdv ] = adev( x,rate,tau,phase, gaps )
 % LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
+%
+% Credits:
+% This code is based on allantools.py, written by Anders Wallin
+%
+
+if (nargin > 5)
+    error('tftools:mdev:TooManyInputs', 'requires at most 2 optional arguments');
+end;
+
+defaults = {1 0};
+
+switch nargin
+    case 3
+        [phase gaps] = defaults{:};
+    case 4
+        gaps=defaults{2};
+end;
 
 if (phase == 0)
+    x=freq2phase(x,rate);
 end;
 
 N=length(x);
