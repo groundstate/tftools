@@ -3,13 +3,13 @@
 
 format long;
 
-% Expected value from NIST 
+% Expected value from NIST NIST SP1065 p.108
 adevNIST = [2.922319e-01 9.965736e-02 3.897804e-02];
 oadevNIST= [2.922319e-01 9.159953e-02 3.241343e-02];
 mdevNIST = [2.922319e-01 6.172376e-02 2.170921e-02];
 totdevNIST=[2.922319e-01 9.134743e-02 3.406530e-02];
 
-% Generate frequency data with white noise
+% Generate frequency data with white noise as per NIST algorithm
 n = 1:1000;
 n(1) = 1234567890;
 for i=1:999
@@ -25,7 +25,7 @@ tau=[1 10 100];
 [mdv  mdverr  nmdv]=mdev(x,1.0,tau);    % 
 [tdv  tdverr  ntdv]=totdev(x,1.0,tau,1,1);
 
-display('Ratio of computed statistics with NIST test data: NIST SP1065 p. 108');
+display('Ratio of computed statistics with NIST test data: NIST SP1065 p.108');
 display('-------------------------------------------------------------');
 display( '             T=1       T=10     T=100');
 

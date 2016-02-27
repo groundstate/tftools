@@ -1,17 +1,22 @@
-function [ dev,deverr, ndev ] = adev( x,rate,tau,overlap,phase, gaps )
+function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
 %ADEV Calculate non-overlapping/overlapping Allan deviation of phase/
 % or fractional frequency data
-%   Usage: ADEV(x,rate,tau,overlap,phase,gaps) 
-%   x is the input time series
-%   rate is the sampling rate, in Hz
-%   tau is the averaging interval 
-%   overlap = 1 means compute overlapping ADEV
-%   phase = 1 means data is phase
-%   gaps = 1 means data contains gaps, tagged with NaN
 %
-%   Frequency data is converted internally to phase
+%   Usage: [ dev, deverr, ndev, new_tau ] = ADEV(x,rate,tau,overlap,phase,gaps) 
+%   Inputs:
+%     x       input time series
+%     rate    sampling rate, in Hz
+%     tau     averaging intervals 
+%     overlap compute overlapping adev (=1), optional argument, default=1 
+%     phase   data is phase (=1), optional argument, default=1
+%     gaps    data contains gaps, tagged with NaN, optional argument, default=0
+%   Outputs:
+%     dev     Allan deviations 
+%     deverr  uncertainties
+%     ndev    number of samples used
+%     new_tau tau values that were used
 %   
-%   See also mdev, totdev.
+%   See also freq2phase, mdev, tau2m, totdev.
 
 % The MIT License (MIT)
 % 
@@ -57,8 +62,10 @@ if (phase == 0)
     x=freq2phase(x,rate);
 end;
 
-ntau=length(tau);
-% FIXME sanity check on tau
+% Validate tau etc
+[ new_tau,mtau ] = tau2m( tau,rate,x );
+
+ntau=length(mtau);
 
 dev=zeros(1,ntau);
 deverr = zeros(1,ntau);
@@ -67,7 +74,7 @@ ndev=zeros(1,ntau);
 dt = 1; % for overlapping Allan deviation
 
 for i=1:ntau 
-   taui=tau(i);
+   taui=mtau(i);
    if (overlap==0)
        dt=taui;
    end;
