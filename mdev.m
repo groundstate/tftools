@@ -1,7 +1,7 @@
 function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
 %MDEV Calculate modified Allan deviation of phase/
 % or fractional frequency data
-%   Usage: [ dev,deverr,ndev,new_tau ] = MDEV(x,rate,tau,overlap,phase,gaps) 
+%   Usage: [ dev,deverr,ndev,new_tau ] = MDEV(x,rate,tau,phase,gaps) 
 %   Inputs:
 %     x       input time series
 %     rate    sampling rate, in Hz
@@ -14,7 +14,7 @@ function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
 %     ndev    number of samples used
 %     new_tau tau values that were used
 %
-%   See also adev,freq2phase,markgaps,tau2m,totdev.
+%   See also adev, freq2phase, markgaps, tau2m, tdev, totdev.
 %
 
 % The MIT License (MIT)
@@ -64,7 +64,6 @@ end;
 
 N=length(x);
 ntau=length(mtau);
-% FIXME sanity check on tau 
 
 dev=zeros(1,ntau);
 deverr=zeros(1,ntau);

@@ -7,7 +7,7 @@ function [ newtau,mtau ] = tau2m( tau,rate,x )
 %   newtau is vector of sanitised tau values
 %   mtau  is newtau in units of data points
 %
-%   See also adev,freq2phase,markgaps,mdev,totdev
+%   See also adev, freq2phase ,markgaps, mdev, tdev, totdev.
 %
 
 % The MIT License (MIT)

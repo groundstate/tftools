@@ -1,22 +1,21 @@
-function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
-%ADEV Calculate non-overlapping/overlapping Allan deviation of phase/
+function [ dev,deverr,ndev,new_tau ] = tdev( x,rate,tau,phase,gaps)
+%TDEV Calculate time deviation of phase/
 % or fractional frequency data
-%
-%   Usage: [ dev, deverr, ndev, new_tau ] = ADEV(x,rate,tau,overlap,phase,gaps) 
+%   Usage: [ dev,deverr,ndev,new_tau ] = TDEV(x,rate,tau,phase,gaps) 
 %   Inputs:
 %     x       input time series
 %     rate    sampling rate, in Hz
 %     tau     averaging intervals 
-%     overlap compute overlapping adev (=1), optional argument, default=1 
 %     phase   data is phase (=1), optional argument, default=1
 %     gaps    data contains gaps, tagged with NaN, optional argument, default=0
 %   Outputs:
-%     dev     Allan deviations 
+%     dev     time deviations 
 %     deverr  uncertainties
 %     ndev    number of samples used
 %     new_tau tau values that were used
-%   
-%   See also freq2phase, mdev, tau2m, tdev, totdev.
+%
+%   See also adev, freq2phase, markgaps, mdev, tau2m, totdev.
+%
 
 % The MIT License (MIT)
 % 
@@ -40,73 +39,27 @@ function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
 % THE SOFTWARE.
 %
 % Credits:
-% This code is based on allantools.py, written by Anders Wallin
-%
 
-if (nargin > 6)
-    error('tftools:adev:TooManyInputs', 'requires at most 3 optional arguments');
+if (nargin > 5)
+    error('tftools:tdev:TooManyInputs', 'requires at most 2 optional arguments');
 end;
 
-defaults = {1 1 0};
+defaults = {1 0};
 
 switch nargin
     case 3
-        [overlap phase gaps] = defaults{:};
+        [phase gaps] = defaults{:};
     case 4
-        [phase gaps]=defaults{2:3};
-    case 5
-        gaps=defaults{3};
+        gaps=defaults{2};
 end;
 
 if (phase == 0)
     x=freq2phase(x,rate);
 end;
 
-% Validate tau etc
-[ new_tau,mtau ] = tau2m( tau,rate,x );
-
-ntau=length(mtau);
-
-dev=zeros(1,ntau);
-deverr = zeros(1,ntau);
-ndev=zeros(1,ntau);
-
-dt = 1; % for overlapping Allan deviation
-
-for i=1:ntau 
-   taui=mtau(i);
-   if (overlap==0)
-       dt=taui;
-   end;
-   
-   x2=x(2*taui+1:dt:length(x));
-   x1=x(  taui+1:dt:length(x));
-   x0=x(       1:dt:length(x));
-   
-   n = length(x0);
-   if (length(x1) < n)
-       n=length(x1);
-   end;
-   if (length(x2) < n)
-       n=length(x2);
-   end;
-   
-   if (n==0)
-       display(['Not enough data for tau = ' num2str(taui) ': breaking']);
-       break;
-   end;
-   
-   varr = x2(1:n) - 2*x1(1:n) + x0(1:n);
-   if (gaps == 1)
-       varr = varr(~isnan(varr)); % remove NaNs
-       n=length(varr); % new size
-   end;
-   avar = sum(varr .* varr);
-   dev(i) = sqrt(avar/(2.0*n))/taui*rate; 
-   deverr(i) = dev(i)/sqrt(n);
-   ndev(i)=n;
-   
-end
+[dev, deverr, ndev, new_tau] = mdev(x,rate,tau,phase,gaps);
+dev = dev .* new_tau/sqrt(3.0);
+deverr = deverr .* new_tau/sqrt(3.0);
 
 end
 
