@@ -8,6 +8,7 @@ function [ dev,deverr, ndev, new_tau ] = totdev( x,rate,tau,phase,gaps )
 %     tau     averaging intervals 
 %     phase   data is phase (=1), optional argument, default=1
 %     gaps    data contains gaps, tagged with NaN, optional argument, default=0
+%             Only works with phase data.
 %   Outputs:
 %     dev     total deviations 
 %     deverr  uncertainties
@@ -44,6 +45,12 @@ function [ dev,deverr, ndev, new_tau ] = totdev( x,rate,tau,phase,gaps )
 
 if (nargin > 5)
     error('tftools:totdev:TooManyInputs', 'requires at most 2 optional arguments');
+end;
+
+if (nargin == 5)
+    if (phase == 0 && gaps == 1)
+        error('tftools:adev:BadInput', 'gaps in frequency data not supported');
+    end;
 end;
 
 defaults = {1 0};

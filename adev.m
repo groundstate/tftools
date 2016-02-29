@@ -10,6 +10,7 @@ function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
 %     overlap compute overlapping adev (=1), optional argument, default=1 
 %     phase   data is phase (=1), optional argument, default=1
 %     gaps    data contains gaps, tagged with NaN, optional argument, default=0
+%             Only works with phase data.
 %   Outputs:
 %     dev     Allan deviations 
 %     deverr  uncertainties
@@ -45,6 +46,12 @@ function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
 
 if (nargin > 6)
     error('tftools:adev:TooManyInputs', 'requires at most 3 optional arguments');
+end;
+
+if (nargin == 6)
+    if (phase == 0 && gaps == 1)
+        error('tftools:adev:BadInput', 'gaps in frequency data not supported');
+    end;
 end;
 
 defaults = {1 1 0};

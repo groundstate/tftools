@@ -8,6 +8,7 @@ function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
 %     tau     averaging intervals 
 %     phase   data is phase (=1), optional argument, default=1
 %     gaps    data contains gaps, tagged with NaN, optional argument, default=0
+%             Only works with phase data.
 %   Outputs:
 %     dev     modified Allan deviations 
 %     deverr  uncertainties
@@ -42,14 +43,14 @@ function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
 % This code is based on allantools.py, written by Anders Wallin
 %
 
-if (nargin==5)
+if (nargin > 5)
+    error('tftools:mdev:TooManyInputs', 'requires at most 2 optional arguments');
+end;
+
+if (nargin==5) % FIXME
     if (gaps==1)
         error('tftools:mdev:BadInput', 'Data with gaps not supported yet');
     end;
-end;
-
-if (nargin > 5)
-    error('tftools:mdev:TooManyInputs', 'requires at most 2 optional arguments');
 end;
 
 defaults = {1 0};
