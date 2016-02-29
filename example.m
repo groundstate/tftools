@@ -3,8 +3,8 @@
 %
 clear all;
 
-% Generate white phase noise
-x = rand(1,10000);
+% Generate some 'white' noise
+x = rand(1,10000); 
 rate = 1.0; % sampling rate in Hz
 
 tau = zeros(1,12);
@@ -13,21 +13,29 @@ for i=1:12
 end;
 
 % Calculate the overlapping Allan deviation, no gaps
-[adv, adverr, nadv, newtau]  = adev(x,rate,tau,1,1,0);
-
+[wfn_a_dev, wfn_a_err, wfn_n_a, wfn_a_new_tau]  = adev(x,rate,tau,1,0,0);
 % Longer averaging times are possible with TOTDEV
-tottau = [tau 5000 6000 7000 8000 9000];
-[tdv, tdverr, ntdv, tnewtau] = totdev(x,rate,tottau,1,0);
+% but it's not recommended for t>T/2, where T is the sequence length
+tot_tau = [tau 5000 6000 7000 8000 9000];
+[wfn_tot_dev, wfn_tot_err, wfn_n_tot, wfn_tot_new_tau] = totdev(x,rate,tot_tau,0,0);
+
+[wpn_a_dev, wpn_a_err, wpn_a_n, wpn_a_new_tau]  = adev(x,rate,tau,1,1,0);
+% Longer averaging times are possible with TOTDEV
+[wpn_tot_dev, wpn_tot_err, wpn_n_tot, wpn_tot_new_tau] = totdev(x,rate,tot_tau,1,0);
 
 % Compare
 figure(1);
-loglog(newtau,adv,'o-');
+loglog(wfn_a_new_tau,wfn_a_dev,'o-r');
 hold on;
-loglog(tnewtau,tdv,'+-');
-legend('ADEV','TOTDEV');
+loglog(wfn_tot_new_tau,wfn_tot_dev,'+-b');
+
+loglog(wpn_a_new_tau,wpn_a_dev,'*-g');
+loglog(wpn_tot_new_tau,wpn_tot_dev,'x-m');
+
+legend('WFN:ADEV','WFN:TOTDEV','WPN:ADEV','WPN:TOTDEV');
 xlabel('\tau (s)');
 ylabel('deviation');
-title('Comparison of ADEV and TOTDEV - white phase noise');
+title('Comparison of ADEV and TOTDEV: white phase noise and white frequency noise ');
 hold off;
 
 % Now remove some data
@@ -37,16 +45,16 @@ xgaps=x;
 xgaps(1237:2679)=[];
 
 % Detect and tag gaps
-[tgapsfixed,xgapsfixed] = markgaps(tgaps,xgaps,1.0);
+[tgaps_fixed,xgaps_fixed] = markgaps(tgaps,xgaps,1.0);
 
-display(['Length of data was ' num2str(length(xgaps)) ', now ' num2str(length(xgapsfixed))]);
+display(['Length of data was ' num2str(length(xgaps)) ', now ' num2str(length(xgaps_fixed))]);
 
 % Compute Allan deviation with tagged data
-[gadv, gadverr, gnadv, gnewtau]  = adev(xgapsfixed,rate,tau,1,1,1);
+[gaps_a_dev, gaps_a_err, gaps_a_n, gaps_a_new_tau]  = adev(xgaps_fixed,rate,tau,1,1,1);
 
-% Compare Allan deviation 
+% Compare Allan deviation gaps/no gaps
 figure(2);
-semilogx(newtau,1.0 - adv ./ gadv,'o-');
+semilogx(wpn_a_new_tau,1.0 - wpn_a_dev ./ gaps_a_dev,'o-');
 xlabel('\tau (s)');
 ylabel('1 - ADEV(no gap)/ADEV(gap)');
 title('Comparison of ADEV with and without gaps - white phase noise');
