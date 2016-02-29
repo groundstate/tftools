@@ -50,7 +50,7 @@ if (length(newtau)==0)
 end;
 
 % 
-mtau=floor(newtau*rate);
+mtau=round(newtau*rate);
 mtau=unique(mtau);
 
 newtau=mtau/rate;

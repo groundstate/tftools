@@ -42,6 +42,12 @@ function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
 % This code is based on allantools.py, written by Anders Wallin
 %
 
+if (nargin==5)
+    if (gaps==1)
+        error('tftools:mdev:BadInput', 'Data with gaps not supported yet');
+    end;
+end;
+
 if (nargin > 5)
     error('tftools:mdev:TooManyInputs', 'requires at most 2 optional arguments');
 end;
@@ -101,7 +107,7 @@ for i=1:ntau
    mvar = mvar+ sum(varr .* varr);
    n = n+1; % count the first one too
   
-   dev(i) = sqrt(mvar/(2.0*n))/(taui*taui)*rate*rate; % FIXME
+   dev(i) = sqrt(mvar/(2.0*n))/(taui*taui)*rate;
    deverr(i) = dev(i)/sqrt(n);
    ndev(i)=n;
    
