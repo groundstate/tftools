@@ -1,13 +1,13 @@
-function [ dev,deverr,ndev,new_tau ] = tdev( x,rate,tau,phase,gaps)
+function [ dev,deverr,ndev,new_tau ] = tdev( x,rate,tau,phase)
 %TDEV Calculate time deviation of phase/
 % or fractional frequency data
-%   Usage: [ dev,deverr,ndev,new_tau ] = TDEV(x,rate,tau,phase,gaps) 
+%   Usage: [ dev,deverr,ndev,new_tau ] = TDEV(x,rate,tau,phase) 
 %   Inputs:
 %     x       input time series
 %     rate    sampling rate, in Hz
 %     tau     averaging intervals 
 %     phase   data is phase (=1), optional argument, default=1
-%     gaps    data contains gaps, tagged with NaN, optional argument, default=0
+%     
 %   Outputs:
 %     dev     time deviations 
 %     deverr  uncertainties
@@ -40,24 +40,22 @@ function [ dev,deverr,ndev,new_tau ] = tdev( x,rate,tau,phase,gaps)
 %
 % Credits:
 
-if (nargin > 5)
-    error('tftools:tdev:TooManyInputs', 'requires at most 2 optional arguments');
+if (nargin > 4)
+    error('tftools:tdev:TooManyInputs', 'requires at most 1 optional argument');
 end;
 
-defaults = {1 0};
+defaults = {1};
 
 switch nargin
     case 3
-        [phase gaps] = defaults{:};
-    case 4
-        gaps=defaults{2};
+        [phase] = defaults{1};
 end;
 
 if (phase == 0)
     x=freq2phase(x,rate);
 end;
 
-[dev, deverr, ndev, new_tau] = mdev(x,rate,tau,phase,gaps);
+[dev, deverr, ndev, new_tau] = mdev(x,rate,tau,phase);
 dev = dev .* new_tau/sqrt(3.0);
 deverr = deverr .* new_tau/sqrt(3.0);
 

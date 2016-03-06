@@ -1,14 +1,13 @@
-function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
+function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase)
 %MDEV Calculate modified Allan deviation of phase/
 % or fractional frequency data
-%   Usage: [ dev,deverr,ndev,new_tau ] = MDEV(x,rate,tau,phase,gaps) 
+%   Usage: [ dev,deverr,ndev,new_tau ] = MDEV(x,rate,tau,phase) 
 %   Inputs:
 %     x       input time series
 %     rate    sampling rate, in Hz
 %     tau     averaging intervals 
 %     phase   data is phase (=1), optional argument, default=1
-%     gaps    data contains gaps, tagged with NaN, optional argument, default=0
-%             Only works with phase data.
+%     
 %   Outputs:
 %     dev     modified Allan deviations 
 %     deverr  uncertainties
@@ -43,23 +42,15 @@ function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase,gaps)
 % This code is based on allantools.py, written by Anders Wallin
 %
 
-if (nargin > 5)
-    error('tftools:mdev:TooManyInputs', 'requires at most 2 optional arguments');
+if (nargin > 4)
+    error('tftools:mdev:TooManyInputs', 'requires at most 1 optional argument');
 end;
 
-if (nargin==5) % FIXME
-    if (gaps==1)
-        error('tftools:mdev:BadInput', 'Data with gaps not supported yet');
-    end;
-end;
-
-defaults = {1 0};
+defaults = {1};
 
 switch nargin
     case 3
-        [phase gaps] = defaults{:};
-    case 4
-        gaps=defaults{2};
+        [phase] = defaults{1};
 end;
 
 if (phase == 0)

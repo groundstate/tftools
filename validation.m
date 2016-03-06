@@ -20,12 +20,13 @@ n = n / 2147483647;
 
 x=freq2phase(n,1.0);
 tau=[1 10 100];
+rate=1.0;
 
-[adv,  adverr,  nadv]=adev(x,1.0,tau,0);  % non-overlapping ADEV
-[oadv, oadverr, noadv]=adev(x,1.0,tau); % overlapping ADEV
-[mdv,  mdverr,  nmdv]=mdev(x,1.0,tau);    % 
-[tdv,  tdverr,  ntdv]=totdev(x,1.0,tau);
-[timedev, timedeverr,ntimedev]=tdev(x,1.0,tau);
+[adv,  adverr,  nadv]=adev(x,rate,tau,0);  % non-overlapping ADEV
+[oadv, oadverr, noadv]=adev(x,rate,tau); % overlapping ADEV
+[mdv,  mdverr,  nmdv]=mdev(x,rate,tau);    % 
+[tdv,  tdverr,  ntdv]=totdev(x,rate,tau);
+[timedev, timedeverr,ntimedev]=tdev(x,rate,tau);
 
 display('Ratio of computed statistics with NIST test data: NIST SP1065 p.108');
 display('-------------------------------------------------------------');
