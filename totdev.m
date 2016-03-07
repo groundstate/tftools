@@ -66,6 +66,10 @@ if (phase == 0)
     x=freq2phase(x,rate);
 end;
 
+if (iscolumn(x)) % change to row vector
+    x=x';
+end;
+
 % Validate tau etc
 [ new_tau,mtau ] = tau2m( tau,rate,x );
 ntau=length(mtau);
