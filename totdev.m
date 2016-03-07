@@ -104,7 +104,7 @@ for i=1:ntau
    end;
    
    if (n==0)
-       display(['Not enough data for tau = ' num2str(taui) ': breaking']);
+       display(['Not enough data for tau = ' num2str(new_tau(i)) ': breaking']);
        break;
    end;
    

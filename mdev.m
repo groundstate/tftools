@@ -73,7 +73,7 @@ for i=1:ntau
    taui=mtau(i);
   
    if (2*taui >= N || 3*taui >= N) 
-       display(['Not enough data for tau = ' num2str(taui) ': breaking']);
+       display(['Not enough data for tau = ' num2str(new_tau(i)) ': breaking']);
        break
    end;
    
