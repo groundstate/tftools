@@ -58,9 +58,9 @@ defaults = {1 1 0};
 
 switch nargin
     case 3
-        [overlap phase gaps] = defaults{:};
+        [overlap, phase, gaps] = defaults{:};
     case 4
-        [phase gaps]=defaults{2:3};
+        [phase, gaps]=defaults{2:3};
     case 5
         gaps=defaults{3};
 end;

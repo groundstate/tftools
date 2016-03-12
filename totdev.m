@@ -57,7 +57,7 @@ defaults = {1 0};
 
 switch nargin
     case 3
-        [phase gaps] = defaults{:};
+        [phase,gaps] = defaults{:};
     case 4
         gaps=defaults{2};
 end;
