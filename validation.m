@@ -49,36 +49,3 @@ display(['TDEV    ' num2str(r(1),10) ' ' num2str(r(2),10) ' ' num2str(r(3),10)])
 
 display('-------------------------------------------------------------');
 display('Note: NIST values have 7 significant digits.');
-
-% Validation against examples in IEEE 1139-1999
-% These are useful because they are short sets and so expose a different
-% set of potential bugs
-
-display(' ');
-display('Validation against IEEE 1139-1999');
-display('-------------------------------------------------------------');
-
-% ADEV Appendix C3
-% Expected value for tau=2 is 3.95E-6
-x=[0 43.6 89.7 121.6 163.7 208.4 248 289 319.8]; % in us
-tau=[1 2];
-rate=1.0;
-[adv,  adverr,  nadv]=adev(x,rate,tau);  
-display(['OADEV (tau=2) : expect  ' num2str(3.95E-6) ', calculate ' num2str(adv(2)*1.0E-6)]);
-
-
-% MDEV Appendix C3
-% Expected value for tau=2 is 2.47E-6
-x=[0 43.6 89.7 121.6 163.7 208.4 248 289 319.8]; % in us
-tau=[1 2];
-rate=1.0;
-[mdv,  mdverr,  nmdv]=mdev(x,rate,tau);  
-display(['MDEV  (tau=2) : expect  ' num2str(2.47E-6) ', calculate ' num2str(mdv(2)*1.0E-6)]);
-
-% TOTDEV Appendix C4
-% Expected value for tau=2 is 1.79E-9
-x=[1.08 0.5 2.2 4.68 3.29]; % all in ns
-tau=[1 2];
-rate=1.0;
-[tdv,  tdverr,  ntdv]=totdev(x,rate,tau);
-display(['TOTDEV(tau=2) : expect  ' num2str(1.79E-9) ', calculate ' num2str(tdv(2)*1.0E-9)]);
