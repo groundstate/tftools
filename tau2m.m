@@ -45,7 +45,7 @@ newtau=tau;
 newtau(~(tau>0))=[];
 newtau(~(newtau < length(x)/rate))=[];
 
-if (length(newtau)==0)
+if (isempty(newtau))
     error('tftools:tau2m:BadInput', 'sanity check on tau failed');
 end;
 

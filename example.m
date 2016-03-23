@@ -1,7 +1,6 @@
 %
 % Examples to demonstrate the use of tftools
 %
-clear all;
 
 % Generate some 'white' noise
 x = rand(1,10000); 

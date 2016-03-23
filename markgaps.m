@@ -39,7 +39,7 @@ trnd = round(t/dt)*dt;
 % Calculate the expected measurement times
 texp = trnd(1):dt:trnd(length(trnd));
 
-[tf, loc] = ismember(trnd, texp);
+[~, loc] = ismember(trnd, texp);
 
 tn = nan(size(texp));
 xn = tn;
