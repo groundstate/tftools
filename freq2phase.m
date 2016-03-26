@@ -3,7 +3,7 @@ function [ x ] = freq2phase( y, rate )
 %   y is frequency data
 %   rate is the sampling rate, in samples per second
 %
-%   See also adev, markgaps, mdev, tau2m, tdev, totdev.
+%   See also adev, hdev, markgaps, mdev, tau2m, tdev, totdev.
 
 % The MIT License (MIT)
 % 

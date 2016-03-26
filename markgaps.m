@@ -8,7 +8,7 @@ function [ tn, xn ] = markgaps( t, x, dt)
 % Outputs:
 %   Returns expanded input sequences, with missing data flagged by NaN
 %
-%   See also adev, freq2phase, mdev, tau2m, tdev, totdev.
+%   See also adev, freq2phase, hdev, mdev, tau2m, tdev, totdev.
 %
 
 % The MIT License (MIT)

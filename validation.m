@@ -7,6 +7,8 @@ format long;
 adevNIST  = [2.922319e-01 9.965736e-02 3.897804e-02];
 oadevNIST = [2.922319e-01 9.159953e-02 3.241343e-02];
 mdevNIST  = [2.922319e-01 6.172376e-02 2.170921e-02];
+hdevNIST  = [2.943883e-01 1.052754e-01 3.910861e-02];
+ohdevNIST = [2.943883e-01 9.581083e-02 3.237638e-02];
 totdevNIST= [2.922319e-01 9.134743e-02 3.406530e-02];
 tdevNIST  = [1.687202e-01 3.563623e-01 1.253382];
 
@@ -25,6 +27,8 @@ rate=1.0;
 [adv,  adverr,  nadv]=adev(x,rate,tau,0);  % non-overlapping ADEV
 [oadv, oadverr, noadv]=adev(x,rate,tau); % overlapping ADEV
 [mdv,  mdverr,  nmdv]=mdev(x,rate,tau);    % 
+[hdv,  hdverr,  nhdv]=hdev(x,rate,tau,0);
+[ohdv,  ohdverr,  nohdv]=hdev(x,rate,tau); % overlapping HDEV
 [tdv,  tdverr,  ntdv]=totdev(x,rate,tau);
 [timedev, timedeverr,ntimedev]=tdev(x,rate,tau);
 
@@ -40,6 +44,12 @@ display(['OADEV   ' num2str(r(1),10) ' ' num2str(r(2),10) ' ' num2str(r(3),10)])
 
 r = mdevNIST ./ mdv;
 display(['MDEV    ' num2str(r(1),10) ' ' num2str(r(2),10) ' ' num2str(r(3),10)]);
+
+r = hdevNIST ./ hdv;
+display(['HDEV    ' num2str(r(1),10) ' ' num2str(r(2),10) ' ' num2str(r(3),10)]);
+
+r = ohdevNIST ./ ohdv;
+display(['OHDEV   ' num2str(r(1),10) ' ' num2str(r(2),10) ' ' num2str(r(3),10)]);
 
 r = totdevNIST ./ tdv;
 display(['TOTDEV  ' num2str(r(1),10) ' ' num2str(r(2),10) ' ' num2str(r(3),10)]);

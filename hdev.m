@@ -1,23 +1,23 @@
-function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
-%ADEV Calculate non-overlapping/overlapping Allan deviation of phase/
+function [ dev, deverr, ndev, new_tau ] = hdev( x,rate,tau,overlap,phase, gaps )
+%ADEV Calculate non-overlapping/overlapping Hadamard deviation of phase/
 % or fractional frequency data
 %
-%   Usage: [ dev, deverr, ndev, new_tau ] = ADEV(x,rate,tau,overlap,phase,gaps) 
+%   Usage: [ dev, deverr, ndev, new_tau ] = HDEV(x,rate,tau,overlap,phase,gaps) 
 %   Inputs:
 %     x       input time series
 %     rate    sampling rate, in Hz
 %     tau     averaging intervals 
-%     overlap compute overlapping adev (=1), optional argument, default=1 
+%     overlap compute overlapping hdev (=1), optional argument, default=1 
 %     phase   data is phase (=1), optional argument, default=1
 %     gaps    data contains gaps, tagged with NaN, optional argument, default=0
 %             Only works with phase data.
 %   Outputs:
-%     dev     Allan deviations 
+%     dev     Hadamard deviations 
 %     deverr  uncertainties
 %     ndev    number of samples used
 %     new_tau tau values that were used
 %   
-%   See also freq2phase, hdev, mdev, tau2m, tdev, totdev.
+%   See also adev, freq2phase, mdev, tau2m, tdev, totdev.
 
 % The MIT License (MIT)
 % 
@@ -41,16 +41,16 @@ function [ dev, deverr, ndev, new_tau ] = adev( x,rate,tau,overlap,phase, gaps )
 % THE SOFTWARE.
 %
 % Credits:
-% This code is based on allantools.py, written by Anders Wallin
+% 
 %
 
 if (nargin > 6)
-    error('tftools:adev:TooManyInputs', 'requires at most 3 optional arguments');
+    error('tftools:hdev:TooManyInputs', 'requires at most 3 optional arguments');
 end;
 
 if (nargin == 6)
     if (phase == 0 && gaps == 1)
-        error('tftools:adev:BadInput', 'gaps in frequency data not supported');
+        error('tftools:hdev:BadInput', 'gaps in frequency data not supported');
     end;
 end;
 
@@ -78,7 +78,7 @@ dev=zeros(1,ntau);
 deverr = zeros(1,ntau);
 ndev=zeros(1,ntau);
 
-dt = 1; % for overlapping Allan deviation
+dt = 1; % for overlapping Hadamard deviation
 
 for i=1:ntau 
    taui=mtau(i);
@@ -86,6 +86,7 @@ for i=1:ntau
        dt=taui;
    end;
    
+   x3=x(3*taui+1:dt:length(x));
    x2=x(2*taui+1:dt:length(x));
    x1=x(  taui+1:dt:length(x));
    x0=x(       1:dt:length(x));
@@ -97,23 +98,27 @@ for i=1:ntau
    if (length(x2) < n)
        n=length(x2);
    end;
-   
+   if (length(x3) < n)
+       n=length(x3);
+   end;
    if (n==0)
-       display(['Not enough data for tau = ' num2str(new_tau(i)) ': breaking']);
+       display(['hdev: not enough data for tau = ' num2str(new_tau(i)) ': breaking']);
        break;
    end;
    
-   varr = x2(1:n) - 2*x1(1:n) + x0(1:n);
+   varr = x3(1:n) - 3*x2(1:n) + 3*x1(1:n)- x0(1:n);
    if (gaps == 1)
        varr = varr(~isnan(varr)); % remove NaNs
        n=length(varr); % new size
    end;
-   avar = sum(varr .* varr);
-   dev(i) = sqrt(avar/(2.0*n))/taui*rate; 
+   
+   hvar = sum(varr .* varr);
+   dev(i) = sqrt(hvar/(6.0*n))/taui*rate; 
    deverr(i) = dev(i)/sqrt(n);
    ndev(i)=n;
    
 end
 
 end
+
 

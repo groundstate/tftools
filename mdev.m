@@ -14,7 +14,7 @@ function [ dev,deverr,ndev,new_tau ] = mdev( x,rate,tau,phase)
 %     ndev    number of samples used
 %     new_tau tau values that were used
 %
-%   See also adev, freq2phase, markgaps, tau2m, tdev, totdev.
+%   See also adev, freq2phase, hdev, markgaps, tau2m, tdev, totdev.
 %
 
 % The MIT License (MIT)
