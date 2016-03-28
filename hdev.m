@@ -1,5 +1,5 @@
 function [ dev, deverr, ndev, new_tau ] = hdev( x,rate,tau,overlap,phase, gaps )
-%ADEV Calculate non-overlapping/overlapping Hadamard deviation of phase/
+%HDEV Calculate non-overlapping/overlapping Hadamard deviation of phase/
 % or fractional frequency data
 %
 %   Usage: [ dev, deverr, ndev, new_tau ] = HDEV(x,rate,tau,overlap,phase,gaps) 

@@ -70,3 +70,32 @@ xlabel('\tau (s)');
 ylabel('1 - ADEV(no gap)/ADEV(gap)');
 title('Comparison of ADEV with and without gaps - white phase noise');
 
+% Example of use of confidence interval estimates
+
+% Generate frequency data with white noise as per NIST algorithm
+% (see validation.m)
+x = 1:1000;
+x(1) = 1234567890;
+for i=1:999
+    x(i+1)= mod(16807*x(i),2147483647);
+end;
+x = x / 2147483647;
+
+rate=1.0;
+tau = [1 2 4 8 16 32 64 128];
+phase=0;
+gaps=0;
+% Note, must be overlapping for adevconf
+[wfn_a_dev, wfn_a_err, wfn_n_a, wfn_a_new_tau]  = adev(x,rate,tau,1,phase,gaps);
+
+% Limits for 95% confidence
+% Here, since the rate equals 1.0, tau=m
+[lowerlim,upperlim]= adevconf(length(x),tau,95,'white fm');
+
+f3=figure(3);
+errorbar(wfn_a_new_tau,wfn_a_dev,lowerlim .* wfn_a_dev, upperlim .* wfn_a_dev,'+-');
+ax = get(f3,'CurrentAxes');
+set(ax,'XScale','log','YScale','log') 
+xlabel('\tau (s)');
+ylabel('ADEV');
+title('ADEV with confidence limits');
