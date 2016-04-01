@@ -51,7 +51,7 @@ end;
 
 % 
 mtau=round(newtau*rate);
-mtau=unique(mtau);
+mtau=unique(mtau); 
 
 newtau=mtau/rate;
 

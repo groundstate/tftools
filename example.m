@@ -70,8 +70,7 @@ xlabel('\tau (s)');
 ylabel('1 - ADEV(no gap)/ADEV(gap)');
 title('Comparison of ADEV with and without gaps - white phase noise');
 
-% Example of use of confidence interval estimates
-
+% Example of use of Theo1
 % Generate frequency data with white noise as per NIST algorithm
 % (see validation.m)
 x = 1:1000;
@@ -82,20 +81,42 @@ end;
 x = x / 2147483647;
 
 rate=1.0;
-tau = [1 2 4 8 16 32 64 128];
+tau = [1 2 4 8 16 32 64 128 256 499];
 phase=0;
 gaps=0;
-% Note, must be overlapping for adevconf
+
 [wfn_a_dev, wfn_a_err, wfn_n_a, wfn_a_new_tau]  = adev(x,rate,tau,1,phase,gaps);
 
+tauTheo1= 0.75*[ 10 16 32 64 128 256 512 768 1000];
+[wfn_theo1_dev, wfn_theo1_err, wfn_theo1_a, wfn_theo1_new_tau]  = theo1dev(x,rate,tauTheo1,phase);
+
+figure(3);
+loglog( wfn_a_new_tau,wfn_a_dev,'+-');
+hold on;
+loglog( wfn_theo1_new_tau,wfn_theo1_dev,'o-');
+loglog([1.0 1000.0],[1.0/sqrt(12.0) 1.0/sqrt(12)/sqrt(1000)],'-'); 
+legend('ADEV','THEO1DEV','expected');
+xlabel('\tau (s)');
+ylabel('DEV');
+title('Comparison of ADEV and THEO1DEV - white frequency noise');
+
+hold off;
+
+%
+% Example of use of confidence interval estimates
+% Use ADEV calculation from previous example
+%
 % Limits for 95% confidence
 % Here, since the rate equals 1.0, tau=m
 [lowerlim,upperlim]= adevconf(length(x),tau,95,'white fm');
 
-f3=figure(3);
+f4=figure(4);
 errorbar(wfn_a_new_tau,wfn_a_dev,lowerlim .* wfn_a_dev, upperlim .* wfn_a_dev,'+-');
-ax = get(f3,'CurrentAxes');
-set(ax,'XScale','log','YScale','log') 
+ax = get(f4,'CurrentAxes');
+set(ax,'XScale','log','YScale','log');
+hold on;
+loglog([1.0 1000.0],[1.0/sqrt(12.0) 1.0/sqrt(12)/sqrt(1000)],'-'); 
+hold off;
 xlabel('\tau (s)');
 ylabel('ADEV');
 title('ADEV with confidence limits');
