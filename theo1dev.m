@@ -1,13 +1,13 @@
-function [ dev,deverr, ndev, new_tau ] = theo1dev( x,rate,tau,phase)
+function [ dev,deverr, ndev, new_tau ] = theo1dev( x,rate,tau,phase,showprogress)
 % THEO1DEV Calculates the Theo1 deviation
 % THEO1DEV is able to 
 %   Usage: [ dev, deverr, ndev, new_tau ] = THEO1DEV(x,rate,tau,overlap,phase,gaps) 
 %   Inputs:
 %     x       input time series
 %     rate    sampling rate, in Hz
-%     tau     averaging intervals (should be 0.75*m/rate)
+%     tau     averaging intervals (should be 0.75*(m-1)/rate, m even)
 %     phase   data is phase (=1), optional argument, default=1
-%
+%     showprogress progress indicator, since theo1dev can be slow
 %   Outputs:
 %     dev     Theo1 deviations 
 %     deverr  uncertainties (simple estimate)
@@ -38,15 +38,17 @@ function [ dev,deverr, ndev, new_tau ] = theo1dev( x,rate,tau,phase)
 % THE SOFTWARE.
 %
 
-if (nargin > 4)
-    error('tftools:theo1dev:TooManyInputs', 'requires 4 arguments');
+if (nargin > 5)
+    error('tftools:theo1dev:TooManyInputs', 'requires 5 arguments');
 end;
 
-defaults = {1};
+defaults = {1 0};
 
 switch nargin
     case 3
-        [phase] = defaults{1};
+        [phase,showprogress] = defaults{:};
+    case 4
+        showprogress = defaults{2};
 end;
 
 if (phase == 0)
@@ -58,26 +60,34 @@ end;
 Nx=length(x);
 
 new_tau=tau;
+% mtau=round(1+new_tau*rate/0.75);
 mtau=round(new_tau*rate/0.75);
 mtau(mod(mtau,2) > 0) = []; % m must be even
 mtau(mtau < 10) = []; % m must be >= 10 (removes negative m too)
-mtau(mtau > Nx -1) = [];  
+mtau(mtau > Nx -1) = []; 
 mtau=unique(mtau); % this sorts as well
 
 if (isempty(mtau))
     error('tftools:theo1dev:BadInput', 'sanity check on tau failed');
 end;
 
+%new_tau=0.75*(mtau-1)/rate;
 new_tau=0.75*mtau/rate;
 
 ntau=length(new_tau);
 dev=zeros(1,ntau);
 deverr = zeros(1,ntau);
 ndev=zeros(1,ntau);
-
+if (showprogress ~= 0)
+    fprintf('Calculating theo1 ...\n');
+    fprintf('m=');
+end
 for t=1:ntau
     m=mtau(t);
     si=0;
+    if (showprogress ~= 0)
+        fprintf(' %i',m);
+    end
     for i=1:Nx-m
         d=0:m/2 - 1;
         x1=x(i+m);
@@ -93,6 +103,11 @@ for t=1:ntau
     ndev(t)=(Nx -m );
     deverr(t)=dev(t)/sqrt(ndev(t));
 end
+
+if (showprogress ~= 0)
+        fprintf('\n');
+end
+
 end
 
 

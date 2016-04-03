@@ -87,15 +87,21 @@ gaps=0;
 
 [wfn_a_dev, wfn_a_err, wfn_n_a, wfn_a_new_tau]  = adev(x,rate,tau,1,phase,gaps);
 
-tauTheo1= 0.75*[ 10 16 32 64 128 256 512 768 1000];
-[wfn_theo1_dev, wfn_theo1_err, wfn_theo1_a, wfn_theo1_new_tau]  = theo1dev(x,rate,tauTheo1,phase);
+% tau = 0.75*(m-1)*tau and m must be even
+mTheo1=[ 10 16 32 64 128 256 512 768 998 1000];
+%tauTheo1= 0.75*(mTheo1-1); % tau = 1.0
+tauTheo1= 0.75*mTheo1;
+[wfn_theo1_dev, wfn_theo1_err, wfn_n_theo1, wfn_theo1_new_tau]  = theo1dev(x,rate,tauTheo1,phase,1);
+[lowerlim,upperlim]= theo1devci(length(x)+1,mTheo1,68,'white fm'); % add 1 because it's for phase
 
-figure(3);
-loglog( wfn_a_new_tau,wfn_a_dev,'+-');
+f3=figure(3);
+errorbar(wfn_theo1_new_tau,wfn_theo1_dev,lowerlim .* wfn_theo1_dev, upperlim .* wfn_theo1_dev,'+-');
+ax = get(f3,'CurrentAxes');
+set(ax,'XScale','log','YScale','log');
 hold on;
-loglog( wfn_theo1_new_tau,wfn_theo1_dev,'o-');
+loglog( wfn_a_new_tau,wfn_a_dev,'O-');
 loglog([1.0 1000.0],[1.0/sqrt(12.0) 1.0/sqrt(12)/sqrt(1000)],'-'); 
-legend('ADEV','THEO1DEV','expected');
+legend('THEO1DEV','ADEV','expected');
 xlabel('\tau (s)');
 ylabel('DEV');
 title('Comparison of ADEV and THEO1DEV - white frequency noise');
@@ -108,7 +114,7 @@ hold off;
 %
 % Limits for 95% confidence
 % Here, since the rate equals 1.0, tau=m
-[lowerlim,upperlim]= adevconf(length(x),tau,95,'white fm');
+[lowerlim,upperlim]= adevci(length(x),tau,95,'white fm');
 
 f4=figure(4);
 errorbar(wfn_a_new_tau,wfn_a_dev,lowerlim .* wfn_a_dev, upperlim .* wfn_a_dev,'+-');

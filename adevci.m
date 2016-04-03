@@ -1,5 +1,5 @@
-function [ lowerlim, upperlim ] = adevconf( N,m, confidence,noisefn )
-%ADEVCONF Calculates the two-sided confidence interval for the overlapping
+function [ lowerlim, upperlim ] = adevci( N,m, confidence,noisefn )
+%ADEVCI Calculates the two-sided confidence interval for the overlapping
 % Allan deviation, given the noise type.
 %
 %   Usage: [ minerr,maxerr ] = ADEVCONF(n,m,confidence,noisefn) 
@@ -42,7 +42,7 @@ function [ lowerlim, upperlim ] = adevconf( N,m, confidence,noisefn )
 %
 
 if (confidence <=0 || confidence >=100)
-     error('tftools:adevconf:BadInput','confidence must be between 0 and 100');
+     error('tftools:adevci:BadInput','confidence must be between 0 and 100');
 end;
 
 % Estimated degrees of freedom
@@ -63,7 +63,7 @@ elseif (strcmpi(noisefn,'flicker fm'))
 elseif (strcmpi(noisefn,'random walk fm'))
     edf = ((N-2) ./ m) .* ( (N-1)^2  - 3*m*(N-1) + 4.0*m .^2) / (N-3)^2;
 else
-   error('tftools:adevconf:BadInput', ['unknown noise type: ' noisefn]);
+   error('tftools:adevci:BadInput', ['unknown noise type: ' noisefn]);
 end
 
 lowerlim = zeros(size(m));
