@@ -12,13 +12,16 @@ MATLAB functions and scripts
 |tdev.m      |  Time deviation |
 |theo1dev.m  |  Theo1 deviation |
 |totdev.m     | Total deviation, with/without gaps|
+
 |     | Bias correction |
 | ---- | -----|
 |theo1devbias.m | Bias correction for Theo1, for specified noise type|
+
 |     | Confidence interval |
 | ---- | -----|
 |adevci.m  |  Estimation of confidence interval for specified noise type|
 |theo1devci | ditto |
+
 |      | Miscellaneous |
 | ---- | -----|
 |approxchi2inv.m | Approximate solution of the inverse chi-squared function|
