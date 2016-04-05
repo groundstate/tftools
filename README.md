@@ -16,6 +16,7 @@ MATLAB functions and scripts
 |     | Bias correction |
 | ---- | -----|
 |theo1devbias.m | Bias correction for Theo1, for specified noise type|
+|totdevbias.m |   Bias correction for total deviation, for specified noise type|
 
 |     | Confidence interval |
 | ---- | -----|
@@ -28,6 +29,7 @@ MATLAB functions and scripts
 |example.m | Various examples |
 |freq2phase.m | Converts frequency data to phase |
 |markgaps.m    | Detects and tags gaps in a time series |
+|tau2m.m | Generate integer steps from tau vector | 
 |validation.m  |Runs a validation against test data from NIST|
 
 

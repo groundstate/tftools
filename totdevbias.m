@@ -1,22 +1,24 @@
-function [ bias, theo1corr ] = theo1devbias(m,noisefn,theo1 )
-%THEO1DEVBIAS Calculates the bias correction for the Theo1
+function [ bias, totcorr ] = totdevbias(tau,T,noisefn,tot)
+%TOTDEVBIAS Calculates the bias correction for the Theo1
 % deviation, given the noise type, and optionally corrects a vector
-% of Theo1 deviation values
+% of TOTDEV deviation values
 %
-%   Usage: [ bias, theo1corr ] = THEO1DEVBIAS(m,noisefn) 
+%   Usage: [ bias, totcorr ] = TOTDEVBIAS(m,noisefn) 
 %   Inputs:
 %     
-%     m:  vector of averaging intervals (tau*rate)
-%     noisefn: "white pm","flicker pm","white fm","flicker fm",
-%             "random walk fm"
-%     theo1: optional: data to be corrected
+%     tau:  vector of averaging intervals
+%				T:  time interval spanned by the data set
+% noisefn: "white pm","flicker pm","white fm","flicker fm",
+%             "random walk fm" (nb biased only for flicker fm and 
+%							random walk fm)
+%   theo1: optional: data to be corrected
 %        
 %   Outputs:
 %     bias:  vector of bias corrections, defined as
-%            bias(m,tau0)= ADEV(tau)/THEO1DEV(m,tau0) - 1
-% theor1corr: corrected theo1
+%            bias(tau)= ADEV(tau)/TOTDEV(tau) - 1
+% totcorr: corrected TOTDEV
 %
-%   See also adev,freq2phase, hdev, mdev, tau2m, tdev, theo1dev, totdev.
+%   See also totdev.
 
 % The MIT License (MIT)
 % 
@@ -40,28 +42,29 @@ function [ bias, theo1corr ] = theo1devbias(m,noisefn,theo1 )
 % THE SOFTWARE.
 %
 
-% Ref: D A Howe "TheoH: a hybrid, high-confidence statistic
-% that improves on the Allan deviation" Metrologia v43 S322-S331 (2006)
+% 
+% Ref: W.J. Riley NIST SP 1065 "Handbook of Freequency Stability Analysis" p.49
+% 
 
 bias = zeros(size(m));
-theo1corr = ones(size(m));
+totcorr = ones(size(m));
 
 if (strcmpi(noisefn,'white pm'))
-  bias = sqrt(0.09 + 0.74./ (m .^0.4)) - 1;
+  % no bias 
 elseif (strcmpi(noisefn,'flicker pm'))
-  bias = sqrt(0.14 + 0.82 ./ (m .^0.3)) - 1; 
+  % no bias
 elseif (strcmpi(noisefn,'white fm'))
-   % nothing to do
+  % no bias
 elseif (strcmpi(noisefn,'flicker fm'))
-   bias = sqrt(1.87  - 1.05 ./ (m .^0.79)) - 1;
+   bias = 1.0 ./ sqrt(1 - 0.481 * tau/T) - 1;
 elseif (strcmpi(noisefn,'random walk fm'))
-   bias = sqrt(2.70 - 1.53 ./ (m .^0.85)) - 1;
+   bias = 1.0 ./ sqrt(1.0 - 0.75 * tau/T) - 1;
 else
-   error('tftools:theo1devbias:BadInput', ['unknown noise type: ' noisefn]);
+   error('tftools:totdevbias:BadInput', ['unknown noise type: ' noisefn]);
 end
 
 if (nargin == 3)
-    theo1corr = theo1 .* (bias+1);
+    totcorr = tot .* (bias+1);
 end
 
 end
