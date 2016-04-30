@@ -1,21 +1,20 @@
-function [ lowerlim, upperlim ] = adevci( N,m, confidence,noisefn )
-%ADEVCI Calculates the two-sided confidence interval for the overlapping
-% Allan deviation, given the noise type.
+function [ lowerlim, upperlim ] = totdevci( N,m, confidence,noisefn )
+%TOTDEVCI Calculates the two-sided confidence interval for the total
+% deviation, given the noise type.
 %
-%   Usage: [ lowerlim,upperlim ] = ADEVCI(n,m,confidence,noisefn) 
+%   Usage: [ lowerlim,upperlim ] = TOTDEVCI(n,m,confidence,noisefn) 
 %   Inputs:
 %     
 %     N:  number of samples (assuming phase data)
 %     m:  vector of averaging intervals (tau*rate)
 %     confidence: (in %)
-%     noisefn: "white pm","flicker pm","white fm","flicker fm",
-%             "random walk fm"
+%     noisefn: "white fm","flicker fm","random walk fm"
 %   Outputs:
 %     lowerlim:  vector of lower limits of the error estimate
 %     upperlim:  vector of upper limits of the error estimate
 %   The limits are expressed as a fractional error so that 
-%   given the nominal ADEV, the confidence interval is
-%   [1.0-lowerlim, 1.0+upperlim] * ADEV
+%   given the nominal TOTDEV, the confidence interval is
+%   [1.0-lowerlim, 1.0+upperlim] * TOTDEV
 %
 %   See also freq2phase, hdev, mdev, tau2m, tdev, totdev.
 
@@ -42,29 +41,25 @@ function [ lowerlim, upperlim ] = adevci( N,m, confidence,noisefn )
 %
 
 if (confidence <=0 || confidence >=100)
-     error('tftools:adevci:BadInput','confidence must be between 0 and 100');
+     error('tftools:totdevci:BadInput','confidence must be between 0 and 100');
 end;
 
 % Estimated degrees of freedom
-% Ref: NIST SP1065, Table 5 p40
-if (strcmpi(noisefn,'white pm'))
-   edf = (N+1)*(N-2*m) ./ (2.0*(N-m));
-elseif (strcmpi(noisefn,'flicker pm'))
-   edf=exp((log((N -1) ./ (2*m)) .* log((2*m+1)*(N-1)/4.0)) .^ 0.5);
-elseif (strcmpi(noisefn,'white fm'))
-   m2 = 4.0 * m .^ 2;
-   edf = ( 3.0*(N-1) ./ (2.0*m) - 2.0*(N-2)/N ) .* m2 ./ (m2 + 5 ); 
+% Ref: NIST SP1065, Table 7 p41
+if (strcmpi(noisefn,'white fm'))
+   b=1.5;
+   c=0.0;
 elseif (strcmpi(noisefn,'flicker fm'))
-   if (m == 1)
-       edf = 2.0*((N - 2)^2)/(2.3*N - 4.9);
-   else
-       edf = 5.0*N^2 ./ (4.0*m .* (N + 3*m));
-   end
+   b=1.17;
+   c=0.22;
 elseif (strcmpi(noisefn,'random walk fm'))
-    edf = ((N-2) ./ m) .* ( (N-1)^2  - 3*m*(N-1) + 4.0*m .^2) / (N-3)^2;
+   b=0.93;
+   c=0.36;
 else
-   error('tftools:adevci:BadInput', ['unknown noise type: ' noisefn]);
+   error('tftools:totdevci:BadInput', ['unknown noise type: ' noisefn]);
 end
+
+edf = b*N ./ m - c;
 
 lowerlim = zeros(size(m));
 upperlim = zeros(size(m));
@@ -81,14 +76,3 @@ for i=1:length(m)
 end
 
 end
-
-% Validation data from IEEE 1139-1999 p25 Table D.2
-% N=1025;
-% m=[2 8 32 128];
-% wpm_min=[2.9 2.9 3.0 3.1]; % white phase modulation
-% wpm_max=[3.2 3.2 3.4 3.6];
-% fpm_min=[2.9 3.6 5.2 8.4]; % flicker phase modulation
-% fpm_max=[3.1 4.0 6.1 11.0];
-% wfm_min=[2.8 4.8 8.8 16]; % white frequency modulation
-% wfm_max=[3.0 5.6 12 32];
-% 

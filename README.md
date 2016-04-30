@@ -21,7 +21,8 @@ MATLAB functions and scripts
 |     | Confidence interval |
 | ---- | -----|
 |adevci.m  |  Estimation of confidence interval for specified noise type|
-|theo1devci | ditto |
+|theo1devci.m | ditto |
+|totdevci.m | ditto ditto |
 
 |      | Miscellaneous |
 | ---- | -----|

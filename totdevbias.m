@@ -1,5 +1,5 @@
 function [ bias, totcorr ] = totdevbias(tau,T,noisefn,tot)
-%TOTDEVBIAS Calculates the bias correction for the Theo1
+%TOTDEVBIAS Calculates the bias correction for the total
 % deviation, given the noise type, and optionally corrects a vector
 % of TOTDEV deviation values
 %
