@@ -34,11 +34,12 @@ function [ tn, xn ] = markgaps( t, x, dt)
 %
 
 % Measurement times may be inexact, so round them to the nominal spacing
-dt=1.0/dt;
 trnd = round(t/dt)*dt;
 % Calculate the expected measurement times
-texp = trnd(1):dt:trnd(length(trnd));
-
+texp = trnd(1):dt:trnd(length(trnd)); % a row vector
+if (iscolumn(t))
+    texp=texp';
+end
 [~, loc] = ismember(trnd, texp);
 
 tn = nan(size(texp));
