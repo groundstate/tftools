@@ -55,5 +55,12 @@ mtau=unique(mtau);
 
 newtau=mtau/rate;
 
+% Final check on what we have
+newtau(~(newtau>0))=[];
+if (isempty(newtau))
+    error('tftools:tau2m:BadInput', 'final sanity check on tau failed');
+end;
+
+
 end
 
