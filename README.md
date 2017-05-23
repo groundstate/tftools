@@ -26,6 +26,7 @@ MATLAB functions and scripts
 
 |      | Miscellaneous |
 | ---- | -----|
+|acf.m | Autocorrelation function |
 |approxchi2inv.m | Approximate solution of the inverse chi-squared function|
 |example.m | Various examples |
 |freq2phase.m | Converts frequency data to phase |
