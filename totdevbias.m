@@ -3,7 +3,7 @@ function [ bias, totcorr ] = totdevbias(tau,T,noisefn,tot)
 % deviation, given the noise type, and optionally corrects a vector
 % of TOTDEV deviation values
 %
-%   Usage: [ bias, totcorr ] = TOTDEVBIAS(m,noisefn) 
+%   Usage: [ bias, totcorr ] = TOTDEVBIAS(tau,T,noisefn,tot) 
 %   Inputs:
 %     
 %     tau:  vector of averaging intervals
@@ -11,7 +11,7 @@ function [ bias, totcorr ] = totdevbias(tau,T,noisefn,tot)
 % noisefn: "white pm","flicker pm","white fm","flicker fm",
 %             "random walk fm" (nb biased only for flicker fm and 
 %							random walk fm)
-%   theo1: optional: data to be corrected
+%   tot: optional: data to be corrected
 %        
 %   Outputs:
 %     bias:  vector of bias corrections, defined as
@@ -46,8 +46,8 @@ function [ bias, totcorr ] = totdevbias(tau,T,noisefn,tot)
 % Ref: W.J. Riley NIST SP 1065 "Handbook of Freequency Stability Analysis" p.49
 % 
 
-bias = zeros(size(m));
-totcorr = ones(size(m));
+bias = zeros(size(tau));
+totcorr = ones(size(tau));
 
 if (strcmpi(noisefn,'white pm'))
   % no bias 
