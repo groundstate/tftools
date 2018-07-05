@@ -28,7 +28,11 @@ function [ x ] = freq2phase( y, rate )
 %
 
 x = cumsum(y)/rate;
-x = [0 x];
+if (iscolumn(x))
+    x = [0;x];
+else
+    x= [0 x];
+end
 
 end
 
